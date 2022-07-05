@@ -6,9 +6,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="demo3-start-with-relations" />
+        <module name="demo4-start-with-inheritance" />
         <module name="demo1-startjdbc" />
         <module name="demo2-start-with-jpa" />
+        <module name="demo3-start-with-relations" />
       </profile>
     </annotationProcessing>
   </component>

@@ -1,7 +1,12 @@
 package com.infosupport.demo3startwithrelations;
 
+import com.infosupport.demo3startwithrelations.manytomany.bidirectional.AuthorBi;
+import com.infosupport.demo3startwithrelations.manytomany.bidirectional.AuthorWithMap;
+import com.infosupport.demo3startwithrelations.manytomany.bidirectional.Title;
+import com.infosupport.demo3startwithrelations.manytomany.bidirectional.TitleWithMap;
 import com.infosupport.demo3startwithrelations.manytomany.unidirectional.Author;
 import com.infosupport.demo3startwithrelations.manytomany.unidirectional.TitleWithList;
+import com.infosupport.demo3startwithrelations.manytomany.unidirectional.TitleWithSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -244,6 +249,7 @@ public class Demo3StartWithRelationsTests {
     void removePublisherWithEmployeesCascadeRemoveTest()
     {
         insertPublisherOneToManyCascadeRemoveAndEmployeeManyToOneCascadeRemove();
+        em.clear();
         PublisherOneToManyCascadeRemove publisher = em.find(PublisherOneToManyCascadeRemove.class,1);
         etx.begin();
         em.remove(publisher);
@@ -309,10 +315,190 @@ public class Demo3StartWithRelationsTests {
     void authorsWithTitlesWithListTest()
     {
         addTwoAuthorsWithThreeTitles();
-        TitleWithList title1 = em.find(TitleWithList.class,2);
-        assertThat(title1.getAuthors().size()).isEqualTo(1);
-        TitleWithList title2 = em.find(TitleWithList.class,3);
-        assertThat(title1.getAuthors().get(0)).isEqualTo(title2.getAuthors().get(0));
+        em.clear();
+        executeInTransaction( em -> {
+            TitleWithList title1 = em.find(TitleWithList.class, 2);
+            assertThat(title1.getAuthors().size()).isEqualTo(1);
+            TitleWithList title2 = em.find(TitleWithList.class, 3);
+            assertThat(title1.getAuthors().get(0)).isEqualTo(title2.getAuthors().get(0));
+        });
+    }
+
+    void addOneTitleWith5Authors()
+    {
+        etx.begin();
+        TitleWithList title = new TitleWithList("Writen by 5 authors");
+        em.persist(title);
+        for (int i = 0; i < 5; i++)
+        {
+            Author myAuthor = new Author("Author " + i);
+            em.persist(myAuthor);
+            title.getAuthors().add(myAuthor);
+        }
+        etx.commit();
+    }
+    @Test
+    void removeOneAuthorFromListOfFive()
+    {
+        addOneTitleWith5Authors();
+        TitleWithList title = em.find(TitleWithList.class,1);
+        Author myAuthor = title.getAuthors().get(0);
+        etx.begin();
+        title.getAuthors().remove(myAuthor);
+        etx.commit();
+        em.clear();
+        executeInTransaction(em -> {
+            final TitleWithList myTitle = em.find(TitleWithList.class, 1);
+            assertThat(myTitle.getAuthors().size()).isEqualTo(4);
+        });
+    }
+    void addOneTitleWihtSetWith5Authors()
+    {
+        etx.begin();
+        TitleWithSet title = new TitleWithSet("Writen by 5 authors");
+        em.persist(title);
+        for (int i = 0; i < 5; i++)
+        {
+            Author myAuthor = new Author("Author " + i);
+            em.persist(myAuthor);
+            title.getAuthors().add(myAuthor);
+        }
+        etx.commit();
+    }
+    @Test
+    void  removeOneAuthorFromSetOfFive()
+    {
+        addOneTitleWihtSetWith5Authors();
+        etx.begin();
+        TitleWithSet title = em.find(TitleWithSet.class,1);
+        Author myAuthor = title.getAuthors().iterator().next();
+        title.getAuthors().remove(myAuthor);
+        etx.commit();
+        em.clear();
+        executeInTransaction(em -> {
+            final TitleWithSet myTitle = em.find(TitleWithSet.class, 1);
+            assertThat(myTitle.getAuthors().size()).isEqualTo(4);
+        });
+    }
+    void addTwoAuthorsWithThreeTitlesAndOneExtraBidirectional()
+    {
+        AuthorBi a1 = new AuthorBi("Peter");
+        AuthorBi a2 = new AuthorBi("John");
+        List<Title> titles1 = List.of(new Title("Java Programming"), new Title("Introduction to JPA"),new Title("Origin of Java"));
+        List<Title> titles2 = List.of(new Title("Python Programming"), new Title("Introduction to Python"),new Title("Origin of Python"));
+        Title extraTitle = new Title("Java and Python comparison");
+        etx.begin();
+        em.persist(a1);
+        for(Title t : titles1)
+        {
+            t.getAuthors().add(a1);
+            a1.getTitles().add(t);
+            em.persist(t);
+        }
+        em.persist(a2);
+        for(Title t : titles2)
+        {
+            t.getAuthors().add(a2);
+            a2.getTitles().add(t);
+            em.persist(t);
+        }
+        em.persist(extraTitle);
+        a1.getTitles().add(extraTitle);
+        extraTitle.getAuthors().add(a1);
+        a2.getTitles().add(extraTitle);
+        extraTitle.getAuthors().add(a2);
+        etx.commit();
+    }
+    @Test
+    void fetchAllAuthorsBiWithTitles()
+    {
+        addTwoAuthorsWithThreeTitlesAndOneExtraBidirectional();
+        em.clear();
+        String queryString = "select distinct a from AuthorBi a join fetch a.titles ";
+        Query query = em.createQuery(queryString,AuthorBi.class);
+        List<AuthorBi> result = query.getResultList();
+        assertThat(result.size()).isEqualTo(2);
+        for (AuthorBi author : result)
+        {
+            assertThat(author.getTitles().size()).isEqualTo(4);
+            logger.info("Author name: " + author.getName());
+        }
+    }
+    @Test
+    void removeOneAuthorBiCascade()
+    {
+        addTwoAuthorsWithThreeTitlesAndOneExtraBidirectional();
+        em.clear();
+        executeInTransaction( em -> {
+            final AuthorBi authorToDelete = em.find(AuthorBi.class, 1);
+            em.remove(authorToDelete);
+        });
+        executeInTransaction( em -> {
+            final AuthorBi authorLeft = em.find(AuthorBi.class,5);
+            assertThat(authorLeft.getTitles().size()).isEqualTo(3);
+        });
+    }
+
+    void addTwoAuthorsWithMapWithThreeTitlesWithMapAndOneExtraBidirectional()
+    {
+        AuthorWithMap a1 = new AuthorWithMap("Peter");
+        AuthorWithMap a2 = new AuthorWithMap("John");
+        List<TitleWithMap> titles1 = List.of(new TitleWithMap("Java Programming"), new TitleWithMap("Introduction to JPA"),new TitleWithMap("Origin of Java"));
+        List<TitleWithMap> titles2 = List.of(new TitleWithMap("Python Programming"), new TitleWithMap("Introduction to Python"),new TitleWithMap("Origin of Python"));
+        TitleWithMap extraTitle = new TitleWithMap("Java and Python comparison");
+        etx.begin();
+        em.persist(a1);
+        for(TitleWithMap t : titles1)
+        {
+            em.persist(t);
+            em.flush();
+            t.getAuthors().put(a1.getId(),a1);
+            a1.getTitles().put(t.getId(),t);
+        }
+        em.persist(a2);
+        for(TitleWithMap t : titles2)
+        {
+            em.persist(t);
+            em.flush();
+            t.getAuthors().put(a2.getId(),a2);
+            a2.getTitles().put(t.getId(),t);
+        }
+        em.persist(extraTitle);
+        em.flush();
+        a1.getTitles().put(extraTitle.getId(), extraTitle);
+        extraTitle.getAuthors().put(a1.getId(), a1);
+        a2.getTitles().put(extraTitle.getId(), extraTitle);
+        extraTitle.getAuthors().put(a2.getId(), a2);
+        etx.commit();
+    }
+    @Test
+    void fetchAllAuthorsWithMapWithTitlesWithMap()
+    {
+        addTwoAuthorsWithMapWithThreeTitlesWithMapAndOneExtraBidirectional();
+        em.clear();
+        String queryString = "select distinct a from AuthorWithMap a join fetch a.titles ";
+        Query query = em.createQuery(queryString,AuthorWithMap.class);
+        List<AuthorWithMap> result = query.getResultList();
+        assertThat(result.size()).isEqualTo(2);
+        for (AuthorWithMap author : result)
+        {
+            assertThat(author.getTitles().size()).isEqualTo(4);
+            logger.info("Author name: " + author.getName());
+        }
+    }
+    @Test
+    void removeOneAuthorWithMapCascade()
+    {
+        addTwoAuthorsWithMapWithThreeTitlesWithMapAndOneExtraBidirectional();
+        em.clear();
+        executeInTransaction( em -> {
+            final AuthorWithMap authorToDelete = em.find(AuthorWithMap.class, 1);
+            em.remove(authorToDelete);
+        });
+        executeInTransaction( em -> {
+            final AuthorWithMap authorLeft = em.find(AuthorWithMap .class,5);
+            assertThat(authorLeft.getTitles().size()).isEqualTo(3);
+        });
     }
 
 }
