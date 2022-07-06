@@ -12,6 +12,7 @@
         <module>demo2-start-with-jpa</module>
         <module>demo3-start-with-relations</module>
         <module>demo4-start-with-inheritance</module>
+        <module>demo5-start-with-queries</module>
     </modules>
     <packaging>pom</packaging>
 

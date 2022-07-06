@@ -66,5 +66,17 @@ public class Demo4StartWithInheritanceTests {
         List<Person> result = query.getResultList();
         assertThat(result.size()).isEqualTo(4);
     }
+    @Test
+    void listAllTeachers()
+    {
+        addSomeStudentsAndTeachers();
+        em.clear();
+        String queryString = "select distinct t from Teacher t join fetch t.subject";
+        Query query = em.createQuery(queryString,Teacher.class);
+        List<Teacher> result = query.getResultList();
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.get(0).getSubject().size()).isEqualTo(2);
+        assertThat(result.get(1).getSubject().size()).isEqualTo(2);
+    }
 
 }
