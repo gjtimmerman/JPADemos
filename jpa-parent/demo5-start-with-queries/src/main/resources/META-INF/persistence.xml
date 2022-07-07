@@ -23,12 +23,41 @@
             <!--                      value="data.sql" />-->
         </properties>
     </persistence-unit>
-    <persistence-unit name="jpa-hiber-postgres-pubs-mapping3" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="jpa-hiber-postgres-pubs-mapping2" transaction-type="RESOURCE_LOCAL">
         <description>JPA Course</description>
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>com.infosupport.demo5startwithqueries.domain.mapping03tables.Author</class>
         <class>com.infosupport.demo5startwithqueries.domain.mapping03tables.Royalty</class>
         <class>com.infosupport.demo5startwithqueries.domain.mapping03tables.Title</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgresPlusDialect"/>
+            <property name="hibernate.generate_statistics" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/${db.name}"/>
+            <property name="javax.persistence.jdbc.user" value="cursist"/>
+            <property name="javax.persistence.jdbc.password" value="${db.password}"/>
+            <property name="javax.persistence.schema-generation.database.action"
+                      value="none"/>
+            <!--            <property name="javax.persistence.sql-load-script-source"-->
+            <!--                      value="data.sql" />-->
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="jpa-hiber-postgres-pubs-mapping3" transaction-type="RESOURCE_LOCAL">
+        <description>JPA Course</description>
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>com.infosupport.demo5startwithqueries.domain.mappingalltables.Author</class>
+        <class>com.infosupport.demo5startwithqueries.domain.mappingalltables.Royalty</class>
+        <class>com.infosupport.demo5startwithqueries.domain.mappingalltables.Title</class>
+        <class>com.infosupport.demo5startwithqueries.domain.mappingalltables.Sale</class>
+        <class>com.infosupport.demo5startwithqueries.domain.mappingalltables.Store</class>
+        <class>com.infosupport.demo5startwithqueries.domain.mappingalltables.Publisher</class>
+        <class>com.infosupport.demo5startwithqueries.domain.mappingalltables.ScheduledRoyalty</class>
+        <class>com.infosupport.demo5startwithqueries.domain.mappingalltables.Employee</class>
+        <class>com.infosupport.demo5startwithqueries.domain.mappingalltables.Job</class>
+        <class>com.infosupport.demo5startwithqueries.domain.mappingalltables.PublisherInfo</class>
+        <class>com.infosupport.demo5startwithqueries.domain.mappingalltables.Discount</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgresPlusDialect"/>

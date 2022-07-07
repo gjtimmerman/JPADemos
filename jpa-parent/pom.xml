@@ -13,6 +13,7 @@
         <module>demo3-start-with-relations</module>
         <module>demo4-start-with-inheritance</module>
         <module>demo5-start-with-queries</module>
+        <module>demo6-start-with-concurrency-control</module>
     </modules>
     <packaging>pom</packaging>
 

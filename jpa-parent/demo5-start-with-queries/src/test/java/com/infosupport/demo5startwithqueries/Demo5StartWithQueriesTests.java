@@ -1,9 +1,8 @@
 package com.infosupport.demo5startwithqueries;
 
-import com.infosupport.demo5startwithqueries.domain.mapping03tables.Author;
+import com.infosupport.demo5startwithqueries.domain.mapping01table.Author;
 
 import com.infosupport.demo5startwithqueries.domain.mapping01table.FullName;
-import org.apache.logging.log4j.core.pattern.FullLocationPatternConverter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -26,7 +25,7 @@ public class Demo5StartWithQueriesTests {
     @BeforeEach
     void setUp()
     {
-        String persistenceUnitName = "jpa-hiber-postgres-pubs-mapping3";
+        String persistenceUnitName = "jpa-hiber-postgres-pubs-mapping1";
         emf = Persistence.createEntityManagerFactory(persistenceUnitName);
         em = emf.createEntityManager();
         etx = em.getTransaction();
@@ -88,15 +87,5 @@ public class Demo5StartWithQueriesTests {
             logger.info(f.toString());
     }
 
-    @Test
-    void selectAuthorsByRoyaltyPercentage()
-    {
-        String queryString = "select distinct a from Author a join Royalty r on a.id = r.authorId where r.royaltyPercentage > 50";
-        TypedQuery<Author> query = em.createQuery(queryString,Author.class);
-        List<Author> results = query.getResultList();
-        assertThat(results.size()).isEqualTo(13);
-        for (Author a: results)
-            logger.info(a.getFirstname());
-    }
 
 }

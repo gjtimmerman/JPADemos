@@ -15,7 +15,7 @@ public class Author {
     private String phone;
     private String state;
     private String zip;
-    private Collection<Royalty> royaltiesPerTitle;
+    private Collection<Royalty> royaltiesPerAuthor;
 
     @Id
     @GeneratedValue
@@ -144,10 +144,10 @@ public class Author {
 
     @OneToMany(mappedBy = "author")
     public Collection<Royalty> getRoyaltiesPerAuthor() {
-        return royaltiesPerTitle;
+        return royaltiesPerAuthor;
     }
 
-    public void setRoyaltiesPerAuthor(Collection<Royalty> royaltiesPerTitle) {
-        this.royaltiesPerTitle = royaltiesPerTitle;
+    public void setRoyaltiesPerAuthor(Collection<Royalty> royaltiesPerAuthor) {
+        this.royaltiesPerAuthor = royaltiesPerAuthor;
     }
 }

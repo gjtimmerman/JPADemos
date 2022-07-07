@@ -1,1 +1,2 @@
+docker volume create db_volume
 docker run --rm --name postgres13 -e POSTGRES_PASSWORD=PaSSw0rd -e POSTGRES_USER=cursist -e POSTGRES_DB=cursistdb -d -p 5432:5432 -v db_volume:/var/lib/postgresql/data postgres
