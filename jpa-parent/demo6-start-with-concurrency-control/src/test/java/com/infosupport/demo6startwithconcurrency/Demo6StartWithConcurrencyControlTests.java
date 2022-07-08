@@ -1,6 +1,6 @@
+package com.infosupport.demo6startwithconcurrency;
+
 import com.infosupport.demo6startwithconcurrencycontrol.Account;
-import org.checkerframework.checker.units.qual.A;
-import org.hibernate.StaleObjectStateException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;

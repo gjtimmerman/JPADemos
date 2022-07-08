@@ -11,10 +11,6 @@
 
     <artifactId>demo6-start-with-concurrency-control</artifactId>
 
-    <properties>
-        <maven.compiler.source>12</maven.compiler.source>
-        <maven.compiler.target>12</maven.compiler.target>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>org.hibernate</groupId>

@@ -9,13 +9,21 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>demo4-start-with-inheritance</artifactId>
+    <artifactId>demo7-start-with-second-level-cache</artifactId>
 
-    <dependencies>
+   <dependencies>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jcache</artifactId>
+        </dependency>
+       <dependency>
+           <groupId>org.ehcache</groupId>
+           <artifactId>ehcache</artifactId>
+       </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>

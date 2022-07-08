@@ -12,10 +12,6 @@
     <groupId>com.infosupport</groupId>
     <artifactId>demo1-startjdbc</artifactId>
 
-    <properties>
-        <maven.compiler.source>12</maven.compiler.source>
-        <maven.compiler.target>12</maven.compiler.target>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
