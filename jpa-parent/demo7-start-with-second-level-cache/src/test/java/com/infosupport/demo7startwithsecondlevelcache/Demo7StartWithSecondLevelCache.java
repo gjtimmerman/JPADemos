@@ -45,11 +45,11 @@ public class Demo7StartWithSecondLevelCache {
         }
 
     }
-    void insertHundredTitles()
+    void insertTenTitles()
     {
         executeInTransaction(em ->
         {
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Title t = new Title("This is a very interesting book! part " + i);
                 em.persist(t);
@@ -59,7 +59,7 @@ public class Demo7StartWithSecondLevelCache {
     @Test
     void readingFromCache()
     {
-//        insertHundredTitles();
+        insertTenTitles();
         executeInTransaction(em ->
         {
             for (int i = 0; i < 10; i++) {

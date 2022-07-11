@@ -21,7 +21,7 @@
             <property name="javax.persistence.jdbc.user" value="cursist"/>
             <property name="javax.persistence.jdbc.password" value="${db.password}"/>
             <property name="javax.persistence.schema-generation.database.action"
-                      value="none"/>
+                      value="drop-and-create"/>
             <!--            <property name="javax.persistence.sql-load-script-source"-->
             <!--                      value="data.sql" />-->
         </properties>
